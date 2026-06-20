@@ -1,43 +1,28 @@
 <?php
 
-namespace App\Observers;
+namespace App\Providers;
 
-use App\Models\Dispute;
-use App\Notifications\DisputeNotification;
+use Illuminate\Support\ServiceProvider;
+use App\Services\FirestoreService;
 
-class DisputeObserver
+class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Dipanggil saat dispute baru dibuat.
-     * Notifikasi ke user yang dilaporkan.
+     * Register any application services.
      */
-    public function created(Dispute $dispute): void
+    public function register(): void
     {
-        $dispute->load('booking');
-
-        $dispute->reportedUser->notify(
-            new DisputeNotification($dispute, DisputeNotification::EVENT_CREATED)
-        );
+        // Register FirestoreService as singleton
+        $this->app->singleton(FirestoreService::class, function ($app) {
+            return new FirestoreService();
+        });
     }
 
     /**
-     * Dipanggil saat dispute diupdate.
-     * Jika status berubah jadi 'resolved', notifikasi ke kedua pihak.
+     * Bootstrap any application services.
      */
-    public function updated(Dispute $dispute): void
+    public function boot(): void
     {
-        if (!$dispute->wasChanged('status')) {
-            return;
-        }
-
-        if ($dispute->status === 'resolved') {
-            $dispute->load('booking');
-
-            $notification = new DisputeNotification($dispute, DisputeNotification::EVENT_RESOLVED);
-
-            // Notifikasi ke pelapor dan yang dilaporkan
-            $dispute->reportedBy->notify($notification);
-            $dispute->reportedUser->notify($notification);
-        }
+        //
     }
 }

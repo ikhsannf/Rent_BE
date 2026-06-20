@@ -243,51 +243,21 @@
             </div>
         </a>
 
-        <div class="nav-section-title">Manajemen</div>
-
-        <a href="{{ route('admin.categories.index') }}" class="nav-item {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
-            <div class="nav-item-inner">
-                <span class="nav-icon">🏷️</span> Kategori Barang
-            </div>
-        </a>
-
-        <a href="{{ route('admin.users.index') }}" class="nav-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+        <a href="{{ route('admin.users') }}" class="nav-item {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
             <div class="nav-item-inner">
                 <span class="nav-icon">👥</span> Pengguna
-                @php $unverified = \App\Models\User::where('is_verified', false)->where('is_active', true)->count() @endphp
-                @if($unverified > 0)
-                    <span class="nav-badge">{{ $unverified }}</span>
-                @endif
             </div>
         </a>
 
-        <a href="{{ route('admin.bookings.index') }}" class="nav-item {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
+        <a href="{{ route('admin.listings') }}" class="nav-item {{ request()->routeIs('admin.listings*') ? 'active' : '' }}">
             <div class="nav-item-inner">
-                <span class="nav-icon">📋</span> Monitoring Transaksi
+                <span class="nav-icon">📦</span> Barang
             </div>
         </a>
 
-        <a href="{{ route('admin.disputes.index') }}" class="nav-item {{ request()->routeIs('admin.disputes.*') ? 'active' : '' }}">
+        <a href="{{ route('admin.bookings') }}" class="nav-item {{ request()->routeIs('admin.bookings*') ? 'active' : '' }}">
             <div class="nav-item-inner">
-                <span class="nav-icon">⚖️</span> Penanganan Dispute
-                @php $openDisputes = \App\Models\Dispute::where('status', 'open')->count() @endphp
-                @if($openDisputes > 0)
-                    <span class="nav-badge">{{ $openDisputes }}</span>
-                @endif
-            </div>
-        </a>
-
-        <a href="{{ route('admin.notifications.index') }}" class="nav-item {{ request()->routeIs('admin.notifications.*') ? 'active' : '' }}">
-            <div class="nav-item-inner">
-                <span class="nav-icon">🔔</span> Notifikasi Sistem
-                @php
-                    $notifCount = \App\Models\Booking::where('status','pending')->count()
-                        + \App\Models\User::where('is_verified',false)->where('is_active',true)->count()
-                        + \App\Models\Dispute::where('status','open')->count();
-                @endphp
-                @if($notifCount > 0)
-                    <span class="nav-badge">{{ $notifCount }}</span>
-                @endif
+                <span class="nav-icon">📋</span> Transaksi
             </div>
         </a>
     </nav>
@@ -315,14 +285,6 @@
             <div class="topbar-breadcrumb">RentStuff Admin › @yield('page-title', 'Dashboard')</div>
         </div>
         <div class="topbar-right">
-            <a href="{{ route('admin.notifications.index') }}" class="topbar-notif-btn">
-                🔔
-                @if(isset($notifCount) && $notifCount > 0)
-                    <span class="notif-dot"></span>
-                @elseif(\App\Models\Booking::where('status','pending')->count() + \App\Models\User::where('is_verified',false)->where('is_active',true)->count() + \App\Models\Dispute::where('status','open')->count() > 0)
-                    <span class="notif-dot"></span>
-                @endif
-            </a>
         </div>
     </header>
 
